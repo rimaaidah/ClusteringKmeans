@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>K-Means Clustering Web</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .img-section {
+            display: none;
+        }
+        .btn-toggle {
+            margin-right: 10px;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+        h2, h4, h5, .text-primary, .btn-outline-primary {
+            color: green !important;
+            border-color: green !important;
+        }
+        .btn-outline-primary:hover {
+            background-color: green !important;
+            color: white !important;
+        }
+        th, td {
+            text-align: center !important;
+        }
+    </style>
+</head>
+<body class="container py-5">
+    <h2 class="text-center mb-4">Aplikasi Clustering Pengguna Social Network Ads</h2>
+
+    <div class="card p-4 shadow-sm mb-5">
+        <form method="POST" action="/proses" enctype="multipart/form-data">
+            <label for="filecsv" class="form-label">Upload Dataset (.csv)</label>
+            <input type="file" name="filecsv" id="filecsv" accept=".csv" class="form-control mb-3" required>
+            <button type="submit" class="btn btn-success">Proses Clustering</button>
+        </form>
+    </div>
+
+    {% if tabel %}
+        {% if 'Gagal' in tabel or 'Tidak ada' in tabel %}
+            <div class="alert alert-danger" role="alert">{{ tabel }}</div>
+        {% else %}
+            <div class="card p-4 shadow-sm mb-4">
+                <h4 class="mb-3">Hasil Clustering (Tabel):</h4>
+                <div class="table-responsive">{{ tabel|safe }}</div>
+
+                <div class="mt-3">
+                    <a href="/download/csv" class="btn btn-outline-success">Download Hasil Clustering (.csv)</a>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-center flex-wrap mb-4">
+                <button class="btn btn-outline-primary btn-toggle" onclick="showImage('hasil')">Lihat Hasil Clustering</button>
+                <button class="btn btn-outline-secondary btn-toggle" onclick="showImage('elbow')">Lihat Elbow Method</button>
+                <button class="btn btn-outline-success btn-toggle" onclick="showImage('silhouette')">Lihat Silhouette Score</button>
+            </div>
+
+            <div id="hasil" class="img-section card p-3 shadow-sm mb-4">
+                <h5>Visualisasi Hasil Clustering</h5>
+                <img src="{{ gambar }}" alt="Hasil Clustering">
+                <a href="/download/gambar/hasil" class="btn btn-outline-primary mt-2">Download Gambar</a>
+            </div>
+
+            <div id="elbow" class="img-section card p-3 shadow-sm mb-4">
+                <h5 class="text-secondary">Grafik Elbow Method</h5>
+                <img src="{{ elbow }}" alt="Elbow Method">
+                <a href="/download/gambar/elbow" class="btn btn-outline-secondary mt-2">Download Gambar</a>
+            </div>
+
+            <div id="silhouette" class="img-section card p-3 shadow-sm mb-4">
+                <h5 class="text-success">Grafik Silhouette Score</h5>
+                <img src="{{ silhouette }}" alt="Silhouette Score">
+                <a href="/download/gambar/silhouette" class="btn btn-outline-success mt-2">Download Gambar</a>
+            </div>
+        {% endif %}
+    {% endif %}
+
+    <script>
+        function showImage(id) {
+            const sections = document.querySelectorAll('.img-section');
+            sections.forEach(section => section.style.display = 'none');
+            document.getElementById(id).style.display = 'block';
+        }
+    </script>
+</body>
+</html>
